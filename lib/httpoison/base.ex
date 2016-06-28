@@ -358,11 +358,16 @@ defmodule HTTPoison.Base do
 
   @doc false
   def default_process_url(url) do
+    encoded_url = encode_spaces_in_url(url)
     case url |> String.slice(0, 8) |> String.downcase do
-      "http://" <> _ -> url
-      "https://" <> _ -> url
-      _ -> "http://" <> url
+      "http://" <> _ -> encoded_url
+      "https://" <> _ -> encoded_url
+      _ -> "http://" <> encoded_url
     end
+  end
+
+  defp encode_spaces_in_url(url) do
+    String.replace(url, " ", "%20")
   end
 
   defp build_hackney_options(module, options) do
